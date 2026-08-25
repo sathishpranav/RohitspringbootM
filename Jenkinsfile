@@ -37,7 +37,7 @@ pipeline {
             bat """
             sonar-scanner ^
               -Dsonar.projectKey=saidevopspjt ^
-              -Dsonar.organization=yourOrgName ^
+              -Dsonar.organization=sathishpranav ^
               -Dsonar.sources=. ^
               -Dsonar.java.binaries=target/classes ^
               -Dsonar.host.url=https://sonarcloud.io ^
