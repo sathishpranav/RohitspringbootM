@@ -1,39 +1,38 @@
-pipeline {          //open pipeline block
+pipeline {          // open pipeline block
     agent any
 
-    tools { //open tools block
-        maven 'Maven3'   // Configure Maven in Jenkins global tools
-        jdk 'Java21'     // Configure JDK in Jenkins global tools
+    tools {         // open tools block
+        maven 'Maven3'
+        jdk 'Java21'
         sonarScanner 'SonarScanner'
-    }   //close tools block
-   
-    triggers {      //open triggers block
-        // Auto-trigger pipeline when you push to GitHub
+    }               // close tools block
+
+    triggers {      // open triggers block
         githubPush()
-    }           //close triggers block
+    }               // close triggers block
 
-    environment {   //open environment block
+    environment {   // open environment block
         DOCKER_IMAGE = "sathishpranav/helloworld-app:latest"
-        REGISTRY_URL = "docker.io"   // Docker Hub registry
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred') // Jenkins credentials ID
-    }   //close environment block
+        REGISTRY_URL = "docker.io"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
+    }               // close environment block
 
-    stages {        //open stages block
-        stage('Step 1: Checkout Code') {//open stage block
-            steps {     //open steps block
+    stages {        // open stages block
+
+        stage('Step 1: Checkout Code') {   // open stage block
+            steps {                        // open steps block
                 checkout scm
-            }//close steps block
-        }   //close stage block
+            }                              // close steps block
+        }                                  // close stage block
 
-        stage('Step 2: Build & Compile') {//open stage block
-            steps { //open steps block
-                // You can keep javac for demo OR switch to Maven
+        stage('Step 2: Build & Compile') { // open stage block
+            steps {
                 bat 'mvn clean package -DskipTests'
-            }   //close steps block
-        }       //close stage block
+            }
+        }
 
-        stage('Step 3: SonarCloud Analysis') {  // open stage block
-            steps {                            // open steps block
+        stage('Step 3: SonarCloud Analysis') {
+            steps {
                 withCredentials([string(credentialsId: 'sonarcloud-token', variable: 'SONAR_TOKEN')]) {
                     bat """
                     sonar-scanner ^
@@ -45,15 +44,38 @@ pipeline {          //open pipeline block
                       -Dsonar.login=%SONAR_TOKEN%
                     """
                 }
-            }                                // close steps block
-        }                                    // close stage block     //closes stages block
+            }
+        }
 
-    post {  //open post block
-        success {   //open success block
+        stage('Step 4: Package JAR File') {
+            steps {
+                bat 'dir target\\*.jar'
+            }
+        }
+
+        stage('Step 5: Docker Build') {
+            steps {
+                bat "docker build -t %DOCKER_IMAGE% ."
+            }
+        }
+
+        stage('Step 6: Docker Push') {
+            steps {
+                bat """
+                echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin
+                docker push %DOCKER_IMAGE%
+                """
+            }
+        }
+
+    }               // ✅ close stages block
+
+    post {          // open post block
+        success {
             echo '✅ Pipeline completed successfully!'
-        }   //close success block
-        failure {//open failure block
+        }
+        failure {
             echo '❌ Pipeline failed. Check logs.'
-        }   //close failure block
-    }   //close post block
-}       //close pipeline block
+        }
+    }               // close post block
+}                   // close pipeline block
