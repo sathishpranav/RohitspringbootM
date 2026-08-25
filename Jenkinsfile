@@ -33,7 +33,7 @@ pipeline {
 
         stage('SonarCloud Analysis') {
     steps {
-        withCredentials([string(credentialsId: 'Sonarqube_token', variable: 'SONAR_TOKEN')]) {
+        withCredentials([string(credentialsId: 'sonarcloud_token', variable: 'SONAR_TOKEN')]) {
             bat """
             sonar-scanner ^
               -Dsonar.projectKey=saidevopspjt ^
