@@ -1,31 +1,31 @@
-pipeline {          // open pipeline block
+pipeline {          // open pipeline
     agent any
 
-    tools {         // open tools block
+    tools {         // open tools
         maven 'Maven3'
         jdk 'Java21'
         sonarScanner 'SonarScanner'
-    }               // close tools block
+    }               // close tools
 
-    triggers {      // open triggers block
+    triggers {      // open triggers
         githubPush()
-    }               // close triggers block
+    }               // close triggers
 
-    environment {   // open environment block
+    environment {   // open environment
         DOCKER_IMAGE = "sathishpranav/helloworld-app:latest"
         REGISTRY_URL = "docker.io"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
-    }               // close environment block
+    }               // close environment
 
-    stages {        // open stages block
+    stages {        // open stages
 
-        stage('Step 1: Checkout Code') {   // open stage block
-            steps {                        // open steps block
+        stage('Step 1: Checkout Code') {
+            steps {
                 checkout scm
-            }                              // close steps block
-        }                                  // close stage block
+            }
+        }
 
-        stage('Step 2: Build & Compile') { // open stage block
+        stage('Step 2: Build & Compile') {
             steps {
                 bat 'mvn clean package -DskipTests'
             }
@@ -68,14 +68,14 @@ pipeline {          // open pipeline block
             }
         }
 
-    }               // ✅ close stages block
+    }               // ✅ close stages
 
-    post {          // open post block
+    post {          // open post
         success {
             echo '✅ Pipeline completed successfully!'
         }
         failure {
             echo '❌ Pipeline failed. Check logs.'
         }
-    }               // close post block
-}                   // close pipeline block
+    }               // close post
+}                   // ✅ close pipeline
