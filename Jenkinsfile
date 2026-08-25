@@ -5,8 +5,8 @@ pipeline {
         maven 'Maven3'   // Configure Maven in Jenkins global tools
         jdk 'Java21'     // Configure JDK in Jenkins global tools
         sonarScanner 'SonarScanner'
-}
-    }
+        }
+   
 
     triggers {
         // Auto-trigger pipeline when you push to GitHub
