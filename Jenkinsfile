@@ -4,7 +4,7 @@ pipeline {          // open pipeline
     tools {         // open tools
         maven 'Maven3'
         jdk 'Java21'
-        sonarScanner 'SonarScanner'
+       
     }               // close tools
 
     triggers {      // open triggers
