@@ -9,7 +9,7 @@ public class HelloWorldController {
 
     @GetMapping("/")
     public String hello() {
-        return "Hello, Sathish 0nd Archana  — Spring Boot Web Service Phase 1!";
+        return "Hello, Sathish and Archana  — Spring Boot Web Service Phase 1!";
     }
 
     @GetMapping("/status")
@@ -19,7 +19,7 @@ public class HelloWorldController {
 
     @GetMapping("/info")
     public String info() {
-        return "This is a demo Spring Boot service.";
+        return "This is a demo Spring Boot service August 24.";
     }
 	@GetMapping("/india")
 	public String india(){
