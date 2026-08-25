@@ -4,6 +4,8 @@ pipeline {
     tools {
         maven 'Maven3'   // Configure Maven in Jenkins global tools
         jdk 'Java21'     // Configure JDK in Jenkins global tools
+        sonarScanner 'SonarScanner'
+}
     }
 
     triggers {
@@ -50,7 +52,8 @@ pipeline {
 
         stage('Step 4: Package JAR File') {
             steps {
-                bat 'ls target/*.jar'
+                bat 'dir target\\*.jar'
+
             }
         }
 
