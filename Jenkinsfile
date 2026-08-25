@@ -31,21 +31,21 @@ pipeline {
             }
         }
 
-        stage('Step 3: SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                   bat '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=saidevopspjt \
-                        -Dsonar.projectName=saidevopspjt \
-                        -Dsonar.sources=. \
-                        -Dsonar.java.binaries=target/classes \
-                        -Dsonar.host.url=http://192.168.1.9:9000 \
-                        -Dsonar.login=yourGeneratedTokenHere
-                    '''
-                }
-            }
+        stage('SonarCloud Analysis') {
+    steps {
+        withCredentials([string(credentialsId: 'sonarcloud-token', variable: 'SONAR_TOKEN')]) {
+            bat """
+            sonar-scanner ^
+              -Dsonar.projectKey=saidevopspjt ^
+              -Dsonar.organization=yourOrgName ^
+              -Dsonar.sources=. ^
+              -Dsonar.java.binaries=target/classes ^
+              -Dsonar.host.url=https://sonarcloud.io ^
+              -Dsonar.login=%SONAR_TOKEN%
+            """
         }
+    }
+}
 
         stage('Step 4: Package JAR File') {
             steps {
