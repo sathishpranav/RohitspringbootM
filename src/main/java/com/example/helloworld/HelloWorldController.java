@@ -9,8 +9,8 @@ public class HelloWorldController {
 
     @GetMapping("/")
     public String hello() {
-        return "Hello, Sathish rohit Hari and Archana  — Spring Boot Web Service Phase 1!";
-    }
+        return "Hello, Sathish rohit Harividharth and Archana  — Spring Boot Web Service Phase 1!";
+    } 
 
     @GetMapping("/status")
     public Map<String, String> status() {
