@@ -9,7 +9,7 @@ public class HelloWorldController {
 
     @GetMapping("/")
     public String hello() {
-        return "Hello, Sathish rohit Harividharth and Archana  — Spring Boot Web Service Phase 1!";
+        return "Hello india, Sathish rohit Harividharth and Archana  — Spring Boot Web Service Phase 1!";
     } 
 
     @GetMapping("/status")
@@ -23,7 +23,7 @@ public class HelloWorldController {
     }
 	@GetMapping("/india")
 	public String india(){
-	return" India is my country Vandhe matharam";
+	return" India is my country Vandhe matharam 1947";
 }
 
 }
