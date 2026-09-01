@@ -19,7 +19,7 @@ public class HelloWorldController {
 
     @GetMapping("/info")
     public String info() {
-        return "This is a demo Spring Boot service August 24.";
+        return "This is a demo Spring Boot service september 1,INDIA.";
     }
 	@GetMapping("/india")
 	public String india(){
