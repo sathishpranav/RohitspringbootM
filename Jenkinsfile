@@ -52,7 +52,13 @@ pipeline {          // open pipeline
                 bat 'dir target\\*.jar'
             }
         }
-
+        stage('Docker Login') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+        }
+    }
+}
         stage('Step 5: Docker Build') {
             steps {
                 bat "docker build -t %DOCKER_IMAGE% ."
