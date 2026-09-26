@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld-deployment
+  name: helloworld-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: helloworld
+      app: helloworld-app
   template:
     metadata:
       labels:
-        app: helloworld
+        app: helloworld-app
     spec:
       containers:
-      - name: helloworld
-        image: <account_id>.dkr.ecr.ap-south-1.amazonaws.com/helloworld-app:1.0
+      - name: helloworld-app
+        image: sathari10/helloworld-app
         ports:
         - containerPort: 8080
