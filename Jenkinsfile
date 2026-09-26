@@ -1,90 +1,38 @@
-pipeline {          // open pipeline
-    agent any
+pipeline {
+    agent any   // Run on any available node
 
-    tools {         // open tools
-        maven 'Maven3'
-        jdk 'Java21'
-       
-    }               // close tools
+    tools {
+        maven 'Maven_3.9.6'   // Configure Maven in Jenkins Global Tool Config
+        jdk 'JDK_21'          // Configure JDK in Jenkins
+    }
 
-    triggers {      // open triggers
-        githubPush()
-    }               // close triggers
-
-    environment {   // open environment
-        DOCKER_IMAGE = "sathishpranav/helloworld-app:latest"
-        REGISTRY_URL = "docker.io"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
-    }               // close environment
-
-    stages {        // open stages
-
-        stage('Step 1: Checkout Code') {
+    stages {
+        stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/sathishpranav/RohitspringbootM.git'
+            // It tells Jenkins to use the Git tool to clone the main
+            //  branch from the specified repository
+            //  url (https://github.com/your-org/your-repo.git) 
+            // into the current workspace directory.
             }
         }
 
-        stage('Step 2: Build & Compile') {
+        stage('Build') {
             steps {
+                // Windows command (PowerShell/Command Prompt)
                 bat 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Step 3: SonarCloud Analysis') {
+        stage('Test') {
             steps {
-                withCredentials([string(credentialsId: 'sonarcloud-token', variable: 'SONAR_TOKEN')]) {
-                    bat """
-                    sonar-scanner ^
-                      -Dsonar.projectKey=saidevopspjt ^
-                      -Dsonar.organization=sathishpranav ^
-                      -Dsonar.sources=. ^
-                      -Dsonar.java.binaries=target/classes ^
-                      -Dsonar.host.url=https://sonarcloud.io ^
-                      -Dsonar.login=%SONAR_TOKEN%
-                    """
-                }
+                bat 'mvn test'
             }
-        }
-
-        stage('Step 4: Package JAR File') {
-            steps {
-                bat 'dir target\\*.jar'
-            }
-        }
-        stage('Docker Login') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
         }
     }
-}
-        stage('Step 5: Docker Build') {
-            steps {
-                bat "docker build -t %DOCKER_IMAGE% ."
-            }
-        }
 
-        stage('Docker Push') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            bat """
-            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-            docker build -t %DOCKER_IMAGE% .
-                     """
-        }
+    post {
+        success { echo '✅ Build & Test completed successfully!' }
+        failure { echo '❌ Build or Test failed. Check logs.' }
     }
 }
-
-
-    }               // ✅ close stages
-
-    post {          // open post
-        success {
-            echo '✅ Pipeline completed successfully!'
-        }
-        failure {
-            echo '❌ Pipeline failed. Check logs.'
-        }
-    }               // close post
-}                   // ✅ close pipeline
